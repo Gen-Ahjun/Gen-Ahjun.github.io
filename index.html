@@ -1,797 +1,1120 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Party Loot Ledger</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Spectral:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
-<script src="https://cdn.tailwindcss.com"></script>
-<script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin></script>
-<script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>
-<script src="https://unpkg.com/@babel/standalone@7.28.1/babel.min.js"></script>
-<style>
-  body { font-family: 'Inter', sans-serif; }
-  .font-display { font-family: 'Spectral', serif; }
-</style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Portfolio — Your Name</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet" />
+
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --ink: #0d1b2e;
+      --paper: #f0f4fa;
+      --paper-warm: #e3eaf5;
+      --accent: #1a5db5;
+      --accent-light: #a8c4e8;
+      --muted: #5a6880;
+      --border: rgba(13,27,46,0.12);
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--paper);
+      color: var(--ink);
+      font-family: 'DM Mono', monospace;
+      font-weight: 300;
+      overflow-x: hidden;
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1.4rem 3rem;
+      background: var(--paper);
+      border-bottom: 1px solid var(--border);
+      backdrop-filter: blur(8px);
+    }
+
+    .nav-logo {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.25rem;
+      font-weight: 600;
+      letter-spacing: 0.02em;
+      text-decoration: none;
+      color: var(--ink);
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 2.5rem;
+      list-style: none;
+    }
+
+    .nav-links a {
+      font-size: 0.72rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--muted);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .nav-links a:hover { color: var(--ink); }
+
+    /* ── HERO ── */
+    .hero {
+      min-height: 100vh;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      padding-top: 5rem;
+    }
+
+    .hero-left {
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      padding: 5rem 3rem 5rem 3rem;
+      border-right: 1px solid var(--border);
+    }
+
+    .hero-tag {
+      font-size: 0.68rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 1.5rem;
+    }
+
+    .hero-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(3.5rem, 7vw, 6.5rem);
+      font-weight: 300;
+      line-height: 0.92;
+      letter-spacing: -0.01em;
+      margin-bottom: 2.5rem;
+    }
+
+    .hero-title em {
+      font-style: italic;
+      color: var(--accent);
+    }
+
+    .hero-desc {
+      font-size: 0.78rem;
+      line-height: 1.8;
+      color: var(--muted);
+      max-width: 36ch;
+      margin-bottom: 3rem;
+    }
+
+    .hero-cta {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.75rem;
+      font-size: 0.72rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--ink);
+      text-decoration: none;
+      border-bottom: 1px solid var(--ink);
+      padding-bottom: 0.3rem;
+      transition: color 0.2s, border-color 0.2s;
+      width: fit-content;
+    }
+
+    .hero-cta:hover { color: var(--accent); border-color: var(--accent); }
+
+    .hero-cta svg { transition: transform 0.2s; }
+    .hero-cta:hover svg { transform: translateX(4px); }
+
+    .hero-right {
+      display: grid;
+      grid-template-rows: 1fr 1fr;
+      position: relative;
+    }
+
+    .hero-img-main {
+      /* Replace src with your image */
+      background: var(--paper-warm);
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .hero-img-main img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .img-placeholder {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.75rem;
+      color: var(--muted);
+      font-size: 0.7rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .img-placeholder svg { opacity: 0.3; }
+
+    .hero-img-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+    }
+
+    .hero-img-sm {
+      background: var(--paper-warm);
+      border-right: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      min-height: 240px;
+    }
+
+    .hero-img-sm:last-child { border-right: none; }
+
+    .hero-img-sm img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    /* ── MARQUEE ── */
+    .marquee-wrap {
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      overflow: hidden;
+      padding: 0.9rem 0;
+      background: var(--ink);
+    }
+
+    .marquee-track {
+      display: flex;
+      gap: 0;
+      animation: marquee 22s linear infinite;
+      width: max-content;
+    }
+
+    .marquee-track span {
+      font-family: 'Cormorant Garamond', serif;
+      font-style: italic;
+      font-size: 1.05rem;
+      color: var(--paper);
+      white-space: nowrap;
+      padding: 0 2.5rem;
+      opacity: 0.7;
+    }
+
+    .marquee-track .dot {
+      color: var(--accent);
+      opacity: 1;
+      padding: 0;
+      font-style: normal;
+    }
+
+    @keyframes marquee {
+      from { transform: translateX(0); }
+      to   { transform: translateX(-50%); }
+    }
+
+    /* ── SECTION HEADING ── */
+    .section-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 3.5rem 3rem 2rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .section-label {
+      font-size: 0.68rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--muted);
+      width: 18ch;
+      flex-shrink: 0;
+    }
+
+    .section-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 2.6rem;
+      font-weight: 300;
+    }
+
+    .section-count {
+      font-size: 0.7rem;
+      color: var(--muted);
+    }
+
+    /* ── GALLERY GRID ── */
+    .gallery {
+      display: grid;
+      grid-template-columns: repeat(12, 1fr);
+      border-bottom: 1px solid var(--border);
+    }
+
+    /* Each card spans different column widths for editorial rhythm */
+    .work-card {
+      border-right: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      overflow: hidden;
+      position: relative;
+      cursor: pointer;
+      background: var(--paper-warm);
+    }
+
+    .work-card:last-child { border-right: none; }
+
+    .work-card.span-5 { grid-column: span 5; }
+    .work-card.span-7 { grid-column: span 7; }
+    .work-card.span-4 { grid-column: span 4; }
+    .work-card.span-8 { grid-column: span 8; }
+    .work-card.span-6 { grid-column: span 6; }
+    .work-card.span-3 { grid-column: span 3; }
+    .work-card.span-9 { grid-column: span 9; }
+
+    .work-card-img {
+      width: 100%;
+      aspect-ratio: 4/3;
+      object-fit: cover;
+      display: block;
+      transition: transform 0.6s cubic-bezier(0.25,0,0,1);
+    }
+
+    .work-card:hover .work-card-img { transform: scale(1.04); }
+
+    .card-placeholder {
+      width: 100%;
+      aspect-ratio: 4/3;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--muted);
+      font-size: 0.68rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .card-placeholder svg { opacity: 0.25; }
+
+    .card-info {
+      padding: 1.2rem 1.4rem 1.4rem;
+      border-top: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+    }
+
+    .card-name {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.15rem;
+      font-weight: 400;
+      line-height: 1.25;
+    }
+
+    .card-meta {
+      font-size: 0.65rem;
+      letter-spacing: 0.1em;
+      color: var(--muted);
+      text-transform: uppercase;
+      text-align: right;
+      line-height: 1.6;
+    }
+
+    /* ── ABOUT ── */
+    .about {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .about-left {
+      padding: 5rem 3rem;
+      border-right: 1px solid var(--border);
+    }
+
+    .about-left .label {
+      font-size: 0.68rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 1.5rem;
+    }
+
+    .about-text {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.6rem;
+      font-weight: 300;
+      line-height: 1.5;
+      max-width: 38ch;
+      margin-bottom: 2.5rem;
+    }
+
+    .about-small {
+      font-size: 0.75rem;
+      line-height: 1.9;
+      color: var(--muted);
+      max-width: 44ch;
+    }
+
+    .about-right {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .about-portrait {
+      flex: 1;
+      background: var(--paper-warm);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 340px;
+      border-bottom: 1px solid var(--border);
+      overflow: hidden;
+    }
+
+    .about-portrait img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .skills-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+    }
+
+    .skill-item {
+      padding: 1.5rem;
+      border-right: 1px solid var(--border);
+      font-size: 0.7rem;
+    }
+
+    .skill-item:last-child { border-right: none; }
+
+    .skill-item .num {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 2rem;
+      font-weight: 300;
+      color: var(--accent);
+      display: block;
+      margin-bottom: 0.25rem;
+    }
+
+    .skill-item .desc {
+      color: var(--muted);
+      letter-spacing: 0.06em;
+      line-height: 1.6;
+      text-transform: uppercase;
+      font-size: 0.65rem;
+    }
+
+    /* ── CONTACT ── */
+    .contact {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+    }
+
+    .contact-left {
+      padding: 5rem 3rem;
+      border-right: 1px solid var(--border);
+    }
+
+    .contact-left .label {
+      font-size: 0.68rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 1.5rem;
+    }
+
+    .contact-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(2.5rem, 5vw, 4rem);
+      font-weight: 300;
+      line-height: 1.05;
+      margin-bottom: 2rem;
+    }
+
+    .contact-email {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.75rem;
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.3rem;
+      font-style: italic;
+      color: var(--accent);
+      text-decoration: none;
+      border-bottom: 1px solid var(--accent-light);
+      padding-bottom: 0.2rem;
+      transition: border-color 0.2s;
+    }
+
+    .contact-email:hover { border-color: var(--accent); }
+
+    .contact-right {
+      padding: 5rem 3rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .social-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .social-list a {
+      font-size: 0.72rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--muted);
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      transition: color 0.2s;
+    }
+
+    .social-list a:hover { color: var(--ink); }
+
+    .social-list a::before {
+      content: '';
+      display: block;
+      width: 24px;
+      height: 1px;
+      background: currentColor;
+      transition: width 0.2s;
+    }
+
+    .social-list a:hover::before { width: 40px; }
+
+    /* ── FOOTER ── */
+    footer {
+      border-top: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1.4rem 3rem;
+    }
+
+    footer p {
+      font-size: 0.68rem;
+      color: var(--muted);
+      letter-spacing: 0.06em;
+    }
+
+    /* ── LIGHTBOX ── */
+    .lightbox {
+      position: fixed;
+      inset: 0;
+      background: rgba(10,20,40,0.93);
+      z-index: 999;
+      display: none;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .lightbox.active { display: flex; }
+
+    .lightbox img {
+      max-width: 88vw;
+      max-height: 88vh;
+      object-fit: contain;
+      border: 1px solid rgba(245,240,232,0.1);
+    }
+
+    .lightbox-close {
+      position: absolute;
+      top: 2rem; right: 2rem;
+      background: none; border: none;
+      color: var(--paper);
+      font-size: 1.5rem;
+      cursor: pointer;
+      font-family: 'DM Mono', monospace;
+      opacity: 0.6;
+      transition: opacity 0.2s;
+    }
+
+    .lightbox-close:hover { opacity: 1; }
+
+    /* ── LANGUAGE SWITCHER ── */
+    .lang-switcher {
+      position: fixed;
+      bottom: 2rem;
+      right: 2rem;
+      z-index: 200;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 0.5rem;
+    }
+
+    .lang-btn {
+      background: var(--ink);
+      color: var(--paper);
+      border: none;
+      border-radius: 2rem;
+      padding: 0.55rem 1.1rem;
+      font-family: 'DM Mono', monospace;
+      font-size: 0.68rem;
+      font-weight: 400;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: background 0.2s, color 0.2s;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .lang-btn:hover { background: var(--accent); }
+
+    .lang-menu {
+      display: flex;
+      flex-direction: column;
+      gap: 0.35rem;
+      overflow: hidden;
+      max-height: 0;
+      transition: max-height 0.3s ease, opacity 0.3s ease;
+      opacity: 0;
+    }
+
+    .lang-menu.open {
+      max-height: 200px;
+      opacity: 1;
+    }
+
+    .lang-option {
+      background: var(--paper);
+      color: var(--ink);
+      border: 1px solid var(--border);
+      border-radius: 2rem;
+      padding: 0.45rem 1.1rem;
+      font-family: 'DM Mono', monospace;
+      font-size: 0.68rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: background 0.15s, color 0.15s;
+      text-align: right;
+    }
+
+    .lang-option:hover { background: var(--accent); color: var(--paper); border-color: var(--accent); }
+    .lang-option.active { background: var(--accent); color: var(--paper); border-color: var(--accent); }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 900px) {
+      nav { padding: 1.2rem 1.5rem; }
+      .nav-links { gap: 1.5rem; }
+      .hero { grid-template-columns: 1fr; min-height: auto; }
+      .hero-left { padding: 4rem 1.5rem 3rem; border-right: none; border-bottom: 1px solid var(--border); }
+      .hero-right { grid-template-rows: auto; }
+      .hero-img-main { min-height: 320px; }
+      .about, .contact { grid-template-columns: 1fr; }
+      .about-left { border-right: none; border-bottom: 1px solid var(--border); padding: 3rem 1.5rem; }
+      .contact-left { border-right: none; border-bottom: 1px solid var(--border); padding: 3rem 1.5rem; }
+      .contact-right { padding: 3rem 1.5rem; }
+      .section-head { padding: 2.5rem 1.5rem 1.5rem; flex-direction: column; gap: 0.5rem; }
+      .gallery { grid-template-columns: 1fr 1fr; }
+      .work-card.span-5,
+      .work-card.span-7,
+      .work-card.span-4,
+      .work-card.span-8,
+      .work-card.span-6,
+      .work-card.span-3,
+      .work-card.span-9 { grid-column: span 1; }
+      footer { padding: 1.2rem 1.5rem; flex-direction: column; gap: 0.5rem; text-align: center; }
+    }
+  </style>
 </head>
 <body>
-<div id="root"></div>
 
-<script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-firestore-compat.js"></script>
-<script>
-  const firebaseConfig = {
-    apiKey: "AIzaSyAnaAiajqFB1V81PpWXZh452fcjp5EoE34",
-    authDomain: "partyloot.firebaseapp.com",
-    projectId: "partyloot",
-    storageBucket: "partyloot.firebasestorage.app",
-    messagingSenderId: "454714514029",
-    appId: "1:454714514029:web:2ec7d497efe4a430eb7d64"
-  };
+  <!-- NAV -->
+  <nav>
+    <a class="nav-logo" href="#">Your Name</a>
+    <ul class="nav-links">
+      <li><a href="#work">Work</a></li>
+      <li><a href="#about">About</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+  </nav>
 
-  firebase.initializeApp(firebaseConfig);
-  const db = firebase.firestore();
-  const ledgerRef = db.collection("ledger").doc("state");
-
-  window.ledgerDB = {
-    subscribe(callback) {
-      return ledgerRef.onSnapshot(
-        (snap) => callback(snap.exists ? snap.data() : null),
-        (err) => console.error("Ledger sync error:", err)
-      );
-    },
-    async setState(data) {
-      await ledgerRef.set(data);
-    },
-  };
-  window.dispatchEvent(new Event("ledgerdb-ready"));
-</script>
-
-<script type="text/babel" data-presets="react">
-const { useState, useEffect, useRef } = React;
-
-/* ---------------- Design tokens ---------------- */
-const C = {
-  cover: "#1F1B15", coverText: "#E9D9AE", coverTextDim: "#B3A07A",
-  page: "#ECE1C8", card: "#F7F0DE", cardBorder: "#D9C9A0",
-  ink: "#2B2115", inkMuted: "#79684E",
-  brass: "#A9782E", brassDark: "#8A611F",
-  green: "#3F5C46", greenSoft: "#E1EAE0",
-  red: "#8C3B32",
-};
-
-const PRESETS = {
-  dnd: { label: "Classic fantasy (10:1)", denominations: [
-    { id: "pp", name: "Platinum", abbr: "pp", value: 1000 },
-    { id: "gp", name: "Gold", abbr: "gp", value: 100 },
-    { id: "sp", name: "Silver", abbr: "sp", value: 10 },
-    { id: "cp", name: "Copper", abbr: "cp", value: 1 },
-  ]},
-  percentile: { label: "Gold & silver (100:1)", denominations: [
-    { id: "gp", name: "Gold", abbr: "gp", value: 100 },
-    { id: "sp", name: "Silver", abbr: "sp", value: 1 },
-  ]},
-  single: { label: "Single currency (e.g. caps)", denominations: [
-    { id: "caps", name: "Caps", abbr: "caps", value: 1 },
-  ]},
-};
-
-const DEFAULT_STATE = {
-  party: { name: "The Party", gold: 0 },
-  currency: PRESETS.dnd.denominations,
-  players: [],
-  items: [],
-};
-
-const TYPE_SUGGESTIONS = ["Weapon", "Armor", "Potion", "Scroll", "Tool", "Trinket", "Misc"];
-
-function genId() { return Date.now().toString(36) + Math.random().toString(36).slice(2, 8); }
-
-function breakdown(base, denominations) {
-  const sorted = [...denominations].sort((a, b) => b.value - a.value);
-  let remaining = Math.max(0, Math.round(base || 0));
-  const parts = [];
-  sorted.forEach((d) => {
-    const count = Math.floor(remaining / d.value);
-    remaining -= count * d.value;
-    if (count > 0) parts.push({ ...d, count });
-  });
-  if (parts.length === 0) {
-    const smallest = sorted[sorted.length - 1];
-    if (smallest) parts.push({ ...smallest, count: 0 });
-  }
-  return parts;
-}
-
-function validateDenoms(denoms) {
-  if (!denoms.length) return "Add at least one denomination.";
-  for (const d of denoms) {
-    if (!d.name.trim() || !d.abbr.trim()) return "Every denomination needs a name and abbreviation.";
-    if (!(d.value > 0) || !Number.isInteger(Number(d.value))) return "Values must be whole numbers greater than zero.";
-  }
-  const smallest = Math.min(...denoms.map((d) => Number(d.value)));
-  if (smallest !== 1) return "Your smallest denomination must have a value of 1 (the base unit everything else is measured against).";
-  return null;
-}
-
-function formatDate(ts) {
-  return new Date(ts).toLocaleDateString(undefined, { month: "short", day: "numeric", year: "numeric" });
-}
-
-function filterAndSort(items, { type, source, sort, search }) {
-  let list = items.slice();
-  if (type !== "all") list = list.filter((i) => i.type === type);
-  if (source !== "all") list = list.filter((i) => i.source === source);
-  if (search.trim()) {
-    const q = search.trim().toLowerCase();
-    list = list.filter((i) => i.name.toLowerCase().includes(q));
-  }
-  switch (sort) {
-    case "oldest": list.sort((a, b) => a.addedAt - b.addedAt); break;
-    case "cost-desc": list.sort((a, b) => b.cost - a.cost); break;
-    case "cost-asc": list.sort((a, b) => a.cost - b.cost); break;
-    case "name": list.sort((a, b) => a.name.localeCompare(b.name)); break;
-    default: list.sort((a, b) => b.addedAt - a.addedAt);
-  }
-  return list;
-}
-
-/* ---------------- Shared UI ---------------- */
-function CoinBreakdown({ base, denominations, size }) {
-  const parts = breakdown(base, denominations);
-  return (
-    <div className="flex flex-wrap gap-1.5">
-      {parts.map((p) => (
-        <span key={p.id} className={`inline-flex items-center gap-1 rounded-full ${size === "sm" ? "px-2 py-0.5 text-xs" : "px-2.5 py-1 text-sm"}`}
-          style={{ background: C.card, border: `1px solid ${C.cardBorder}`, color: C.inkMuted }}>
-          <span className="font-semibold" style={{ color: C.brassDark }}>{p.count}</span>{p.abbr}
-        </span>
-      ))}
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-left">
+      <p class="hero-tag">Illustrator &amp; Visual Artist</p>
+      <h1 class="hero-title">
+        Stories<br>told in<br><em>line &amp; colour</em>
+      </h1>
+      <p class="hero-desc">
+        Independent illustrator based in [City]. Working across editorial,
+        publishing, and commercial spaces — with a deep love for narrative
+        and texture.
+      </p>
+      <a class="hero-cta" href="#work">
+        View selected work
+        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+          <path d="M5 12h14M13 6l6 6-6 6" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </a>
     </div>
-  );
-}
 
-function Pill({ children, tone }) {
-  const t = tone === "green" ? { background: C.greenSoft, border: C.green, color: C.green } : { background: C.card, border: C.cardBorder, color: C.inkMuted };
-  return <span className="inline-flex items-center rounded-md px-2 py-0.5 text-xs font-medium" style={{ background: t.background, border: `1px solid ${t.border}`, color: t.color }}>{children}</span>;
-}
+    <div class="hero-right">
+      <!-- MAIN HERO IMAGE — replace the placeholder div with: <img class="work-card-img" src="your-image.jpg" alt="…"> -->
+      <div class="hero-img-main">
+        <div class="img-placeholder">
+          <svg width="40" height="40" fill="none" stroke="currentColor" stroke-width="1" viewBox="0 0 24 24">
+            <rect x="3" y="3" width="18" height="18" rx="2"/>
+            <circle cx="8.5" cy="8.5" r="1.5"/>
+            <path d="M21 15l-5-5L5 21"/>
+          </svg>
+          Featured illustration
+        </div>
+      </div>
 
-function FilterBar({ items, type, setType, source, setSource, sort, setSort, search, setSearch }) {
-  const types = Array.from(new Set(items.map((i) => i.type))).sort();
-  const sources = Array.from(new Set(items.map((i) => i.source))).sort();
-  const s = { background: C.card, border: `1px solid ${C.cardBorder}`, color: C.ink };
-  return (
-    <div className="flex flex-wrap gap-2 items-center mb-3">
-      <input value={search} onChange={(e) => setSearch(e.target.value)} placeholder="Search by name"
-        className="flex-1 min-w-[140px] rounded-md px-2 py-1.5 text-sm outline-none" style={s} />
-      <select value={type} onChange={(e) => setType(e.target.value)} className="rounded-md px-2 py-1.5 text-sm outline-none" style={s}>
-        <option value="all">All types</option>
-        {types.map((t) => <option key={t} value={t}>{t}</option>)}
-      </select>
-      <select value={source} onChange={(e) => setSource(e.target.value)} className="rounded-md px-2 py-1.5 text-sm outline-none" style={s}>
-        <option value="all">Any source</option>
-        {sources.map((so) => <option key={so} value={so}>{so}</option>)}
-      </select>
-      <select value={sort} onChange={(e) => setSort(e.target.value)} className="rounded-md px-2 py-1.5 text-sm outline-none" style={s}>
-        <option value="newest">Newest first</option>
-        <option value="oldest">Oldest first</option>
-        <option value="cost-desc">Cost: high to low</option>
-        <option value="cost-asc">Cost: low to high</option>
-        <option value="name">Name A–Z</option>
-      </select>
+      <div class="hero-img-grid">
+        <!-- SMALL HERO IMAGES -->
+        <div class="hero-img-sm">
+          <div class="img-placeholder">
+            <svg width="28" height="28" fill="none" stroke="currentColor" stroke-width="1" viewBox="0 0 24 24">
+              <rect x="3" y="3" width="18" height="18" rx="2"/>
+              <circle cx="8.5" cy="8.5" r="1.5"/>
+              <path d="M21 15l-5-5L5 21"/>
+            </svg>
+            Image 2
+          </div>
+        </div>
+        <div class="hero-img-sm" style="border-right:none;">
+          <div class="img-placeholder">
+            <svg width="28" height="28" fill="none" stroke="currentColor" stroke-width="1" viewBox="0 0 24 24">
+              <rect x="3" y="3" width="18" height="18" rx="2"/>
+              <circle cx="8.5" cy="8.5" r="1.5"/>
+              <path d="M21 15l-5-5L5 21"/>
+            </svg>
+            Image 3
+          </div>
+        </div>
+      </div>
     </div>
-  );
-}
+  </section>
 
-function ConfirmButton({ onConfirm, label = "Remove", confirmLabel = "Confirm?" }) {
-  const [confirming, setConfirming] = useState(false);
-  useEffect(() => {
-    if (!confirming) return;
-    const t = setTimeout(() => setConfirming(false), 3000);
-    return () => clearTimeout(t);
-  }, [confirming]);
-  return (
-    <button onClick={() => (confirming ? (onConfirm(), setConfirming(false)) : setConfirming(true))}
-      className="rounded-md px-2 py-1 text-xs font-medium"
-      style={confirming ? { background: C.red, color: "#fff" } : { background: "transparent", color: C.red, border: `1px solid ${C.red}` }}>
-      {confirming ? confirmLabel : label}
+  <!-- MARQUEE -->
+  <div class="marquee-wrap">
+    <div class="marquee-track" id="marqueeTrack">
+      <span>Editorial</span><span class="dot">·</span>
+      <span>Character Design</span><span class="dot">·</span>
+      <span>Book Covers</span><span class="dot">·</span>
+      <span>Concept Art</span><span class="dot">·</span>
+      <span>Pixel Art</span><span class="dot">·</span>
+      <span>Narrative Illustration</span><span class="dot">·</span>
+      <span>Editorial</span><span class="dot">·</span>
+      <span>Character Design</span><span class="dot">·</span>
+      <span>Book Covers</span><span class="dot">·</span>
+      <span>Concept Art</span><span class="dot">·</span>
+      <span>Pixel Art</span><span class="dot">·</span>
+      <span>Narrative Illustration</span><span class="dot">·</span>
+    </div>
+  </div>
+
+  <!-- GALLERY -->
+  <section id="work">
+    <div class="section-head">
+      <span class="section-label">Selected Work</span>
+      <h2 class="section-title">Portfolio</h2>
+      <span class="section-count">06 pieces</span>
+    </div>
+
+    <div class="gallery">
+
+      <!-- CARD 1 — large left -->
+      <article class="work-card span-7" data-src="">
+        <div class="card-placeholder">
+          <svg width="36" height="36" fill="none" stroke="currentColor" stroke-width="1" viewBox="0 0 24 24">
+            <rect x="3" y="3" width="18" height="18" rx="2"/>
+            <circle cx="8.5" cy="8.5" r="1.5"/>
+            <path d="M21 15l-5-5L5 21"/>
+          </svg>
+          Replace with &lt;img class="work-card-img" src="…"&gt;
+        </div>
+        <div class="card-info">
+          <span class="card-name">Piece Title One</span>
+          <span class="card-meta">Editorial<br>2025</span>
+        </div>
+      </article>
+
+      <!-- CARD 2 — small right -->
+      <article class="work-card span-5" data-src="">
+        <div class="card-placeholder">
+          <svg width="36" height="36" fill="none" stroke="currentColor" stroke-width="1" viewBox="0 0 24 24">
+            <rect x="3" y="3" width="18" height="18" rx="2"/>
+            <circle cx="8.5" cy="8.5" r="1.5"/>
+            <path d="M21 15l-5-5L5 21"/>
+          </svg>
+          Image placeholder
+        </div>
+        <div class="card-info">
+          <span class="card-name">Piece Title Two</span>
+          <span class="card-meta">Character<br>2024</span>
+        </div>
+      </article>
+
+      <!-- CARD 3 — three equal -->
+      <article class="work-card span-4" data-src="">
+        <div class="card-placeholder">
+          <svg width="36" height="36" fill="none" stroke="currentColor" stroke-width="1" viewBox="0 0 24 24">
+            <rect x="3" y="3" width="18" height="18" rx="2"/>
+            <circle cx="8.5" cy="8.5" r="1.5"/>
+            <path d="M21 15l-5-5L5 21"/>
+          </svg>
+          Image placeholder
+        </div>
+        <div class="card-info">
+          <span class="card-name">Piece Title Three</span>
+          <span class="card-meta">Book Cover<br>2025</span>
+        </div>
+      </article>
+
+      <article class="work-card span-4" data-src="">
+        <div class="card-placeholder">
+          <svg width="36" height="36" fill="none" stroke="currentColor" stroke-width="1" viewBox="0 0 24 24">
+            <rect x="3" y="3" width="18" height="18" rx="2"/>
+            <circle cx="8.5" cy="8.5" r="1.5"/>
+            <path d="M21 15l-5-5L5 21"/>
+          </svg>
+          Image placeholder
+        </div>
+        <div class="card-info">
+          <span class="card-name">Piece Title Four</span>
+          <span class="card-meta">Concept<br>2024</span>
+        </div>
+      </article>
+
+      <article class="work-card span-4" data-src="">
+        <div class="card-placeholder">
+          <svg width="36" height="36" fill="none" stroke="currentColor" stroke-width="1" viewBox="0 0 24 24">
+            <rect x="3" y="3" width="18" height="18" rx="2"/>
+            <circle cx="8.5" cy="8.5" r="1.5"/>
+            <path d="M21 15l-5-5L5 21"/>
+          </svg>
+          Image placeholder
+        </div>
+        <div class="card-info">
+          <span class="card-name">Piece Title Five</span>
+          <span class="card-meta">Pattern<br>2024</span>
+        </div>
+      </article>
+
+      <!-- CARD 6 — wide bottom -->
+      <article class="work-card span-12" data-src="" style="border-right:none;">
+        <div class="card-placeholder" style="aspect-ratio:16/5;">
+          <svg width="36" height="36" fill="none" stroke="currentColor" stroke-width="1" viewBox="0 0 24 24">
+            <rect x="3" y="3" width="18" height="18" rx="2"/>
+            <circle cx="8.5" cy="8.5" r="1.5"/>
+            <path d="M21 15l-5-5L5 21"/>
+          </svg>
+          Wide panoramic illustration — replace with &lt;img style="aspect-ratio:16/5"&gt;
+        </div>
+        <div class="card-info">
+          <span class="card-name">Piece Title Six</span>
+          <span class="card-meta">Narrative / Mural<br>2025</span>
+        </div>
+      </article>
+
+    </div>
+  </section>
+
+  <!-- ABOUT -->
+  <section id="about" class="about">
+    <div class="about-left">
+      <p class="label">About</p>
+      <p class="about-text">
+        "I believe illustration can hold
+        complexity — the kind of truth
+        that words alone can't reach."
+      </p>
+      <p class="about-small">
+        I'm a freelance illustrator with [X] years of experience working
+        with publishers, editorial outlets, and cultural institutions.
+        My practice is rooted in traditional media — pencil, ink, gouache —
+        though I work fluently in digital.
+        <br><br>
+        Clients have included [Client A], [Client B], and [Client C].
+        Currently open to new commissions and collaborative projects.
+      </p>
+    </div>
+
+    <div class="about-right">
+      <!-- PORTRAIT — replace with <img src="portrait.jpg" alt="Portrait"> -->
+      <div class="about-portrait">
+        <div class="img-placeholder">
+          <svg width="36" height="36" fill="none" stroke="currentColor" stroke-width="1" viewBox="0 0 24 24">
+            <circle cx="12" cy="8" r="4"/>
+            <path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/>
+          </svg>
+          Portrait photo
+        </div>
+      </div>
+
+      <div class="skills-row">
+        <div class="skill-item">
+          <span class="num">08+</span>
+          <span class="desc">Years of practice</span>
+        </div>
+        <div class="skill-item">
+          <span class="num">60+</span>
+          <span class="desc">Projects completed</span>
+        </div>
+        <div class="skill-item" style="border-right:none;">
+          <span class="num">3</span>
+          <span class="desc">Awards &amp; mentions</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CONTACT -->
+  <section id="contact" class="contact">
+    <div class="contact-left">
+      <p class="label">Get in touch</p>
+      <h2 class="contact-title">
+        Let's make<br>something<br>together.
+      </h2>
+      <a class="contact-email" href="mailto:hello@yourname.com">
+        hello@yourname.com
+      </a>
+    </div>
+
+    <div class="contact-right">
+      <ul class="social-list">
+        <li><a href="#">Instagram</a></li>
+        <li><a href="#">Behance</a></li>
+        <li><a href="#">Are.na</a></li>
+        <li><a href="#">LinkedIn</a></li>
+      </ul>
+
+      <p style="font-size:0.68rem; color:var(--muted); line-height:1.8; margin-top:3rem;">
+        Based in [City], working globally.<br>
+        Available for commissions, residencies,<br>
+        and long-term collaborations.
+      </p>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <p>© 2025 Your Name — All rights reserved</p>
+    <p>Illustration Portfolio</p>
+  </footer>
+
+  <!-- LANGUAGE SWITCHER -->
+  <div class="lang-switcher">
+    <div class="lang-menu" id="langMenu">
+      <!-- TO ADD A NEW LANGUAGE: copy one .lang-option button, set data-lang to a new code, add translations below in the `translations` object -->
+      <button class="lang-option" data-lang="es">ES — Español</button>
+      <button class="lang-option active" data-lang="en">EN — English</button>
+    </div>
+    <button class="lang-btn" id="langToggle">
+      <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" stroke-linecap="round"/></svg>
+      <span id="currentLang">EN</span>
     </button>
-  );
-}
+  </div>
 
-function ItemDescription({ text }) {
-  const [expanded, setExpanded] = useState(false);
-  if (!text) return null;
-  const paragraphs = text.split(/\n+/).map((s) => s.trim()).filter(Boolean);
-  return (
-    <div className="mt-1">
-      <button
-        onClick={() => setExpanded(!expanded)}
-        className="text-xs font-medium"
-        style={{ color: C.brassDark }}
-      >
-        {expanded ? "Hide description ▲" : "Show description ▼"}
-      </button>
-      {expanded && (
-        <div className="mt-1.5 space-y-1.5 text-sm" style={{ color: C.inkMuted, maxWidth: 520 }}>
-          {paragraphs.map((p, i) => (
-            <p key={i}>{p}</p>
-          ))}
-        </div>
-      )}
-    </div>
-  );
-}
+  <!-- LIGHTBOX -->
+  <div class="lightbox" id="lightbox">
+    <button class="lightbox-close" id="lightboxClose">✕ close</button>
+    <img id="lightboxImg" src="" alt="" />
+  </div>
 
-function LootRow({ item, denominations, players, right }) {
-  const owner = item.claimedBy ? players.find((p) => p.id === item.claimedBy) : null;
-  return (
-    <div className="rounded-lg p-3 flex flex-wrap items-center gap-3 justify-between" style={{ background: C.card, border: `1px solid ${C.cardBorder}` }}>
-      <div className="flex-1 min-w-[220px]">
-        <div className="font-medium" style={{ color: C.ink }}>{item.name}</div>
-        <ItemDescription text={item.description} />
-        <div className="flex flex-wrap gap-1.5 mt-1">
-          <Pill>{item.type}</Pill>
-          <Pill>from {item.source}</Pill>
-          <Pill>{formatDate(item.addedAt)}</Pill>
-          {owner && <Pill tone="green">claimed by {owner.name}</Pill>}
-        </div>
-      </div>
-      <div className="flex items-center gap-3">
-        <CoinBreakdown base={item.cost} denominations={denominations} size="sm" />
-        {right}
-      </div>
-    </div>
-  );
-}
+  <script>
+    // Lightbox for gallery cards
+    const cards = document.querySelectorAll('.work-card[data-src]');
+    const lightbox = document.getElementById('lightbox');
+    const lightboxImg = document.getElementById('lightboxImg');
+    const lightboxClose = document.getElementById('lightboxClose');
 
-/* ---------------- DM Tab ---------------- */
-function DMTab({ state, actions }) {
-  const [partyName, setPartyName] = useState(state.party.name);
-  const [editingCurrency, setEditingCurrency] = useState(false);
-  const [draftDenoms, setDraftDenoms] = useState(() => state.currency.map((d) => ({ ...d })));
-  const [currencyError, setCurrencyError] = useState(null);
-  const [newPlayer, setNewPlayer] = useState("");
-  const [itemName, setItemName] = useState("");
-  const [itemType, setItemType] = useState("");
-  const [itemSource, setItemSource] = useState("");
-  const [itemDescription, setItemDescription] = useState("");
-  const [costAmount, setCostAmount] = useState("");
-  const [costDenom, setCostDenom] = useState(state.currency[state.currency.length - 1]?.id || "");
-  const [logType, setLogType] = useState("all");
-  const [logSource, setLogSource] = useState("all");
-  const [logSort, setLogSort] = useState("newest");
-  const [logSearch, setLogSearch] = useState("");
-
-  const denomOptions = state.currency;
-  const filteredLog = filterAndSort(state.items, { type: logType, source: logSource, sort: logSort, search: logSearch });
-  const inputStyle = { background: C.card, border: `1px solid ${C.cardBorder}`, color: C.ink };
-  const sectionTitle = "font-display text-lg mb-2";
-  const label = "block text-xs font-medium mb-1";
-
-  function startEditingCurrency() {
-    setDraftDenoms(state.currency.map((d) => ({ ...d })));
-    setCurrencyError(null);
-    setEditingCurrency(true);
-  }
-  function saveCurrency() {
-    const err = validateDenoms(draftDenoms);
-    if (err) { setCurrencyError(err); return; }
-    actions.saveCurrency(draftDenoms.map((d) => ({ ...d, value: Number(d.value) })));
-    setEditingCurrency(false);
-  }
-  function submitItem(e) {
-    e.preventDefault();
-    if (!itemName.trim()) return;
-    const denom = denomOptions.find((d) => d.id === costDenom) || denomOptions[0];
-    const amount = parseFloat(costAmount) || 0;
-    const costBase = Math.round(amount * (denom ? denom.value : 1));
-    actions.addItem({ name: itemName.trim(), type: itemType.trim() || "Misc", source: itemSource.trim() || "Unknown", description: itemDescription.trim(), cost: costBase });
-    setItemName(""); setItemType(""); setItemSource(""); setItemDescription(""); setCostAmount("");
-  }
-
-  return (
-    <div className="space-y-8">
-      <section>
-        <h2 className={sectionTitle} style={{ color: C.ink }}>Party settings</h2>
-        <div className="flex items-center gap-2 mb-4">
-          <input value={partyName} onChange={(e) => setPartyName(e.target.value)}
-            onBlur={() => partyName.trim() && actions.renameParty(partyName.trim())}
-            className="rounded-md px-3 py-1.5 text-sm outline-none" style={{ ...inputStyle, minWidth: 220 }} />
-          <span className="text-xs" style={{ color: C.inkMuted }}>Party name</span>
-        </div>
-        <div className="rounded-lg p-4" style={{ background: C.card, border: `1px solid ${C.cardBorder}` }}>
-          <div className="flex items-center justify-between mb-3">
-            <h3 className="font-medium" style={{ color: C.ink }}>Currency system</h3>
-            {!editingCurrency && (
-              <button onClick={startEditingCurrency} className="rounded-md px-2 py-1 text-xs font-medium" style={{ border: `1px solid ${C.brass}`, color: C.brassDark }}>Edit</button>
-            )}
-          </div>
-          {!editingCurrency ? (
-            <div className="flex flex-wrap gap-2">
-              {state.currency.slice().sort((a, b) => b.value - a.value).map((d) => (
-                <Pill key={d.id}>{d.name} ({d.abbr}) = {d.value}</Pill>
-              ))}
-            </div>
-          ) : (
-            <div className="space-y-3">
-              <div className="flex flex-wrap gap-2">
-                {Object.entries(PRESETS).map(([key, preset]) => (
-                  <button key={key} onClick={() => setDraftDenoms(preset.denominations.map((d) => ({ ...d })))}
-                    className="rounded-md px-2 py-1 text-xs" style={{ border: `1px solid ${C.cardBorder}`, color: C.inkMuted }}>{preset.label}</button>
-                ))}
-              </div>
-              <div className="space-y-2">
-                {draftDenoms.map((d, idx) => (
-                  <div key={d.id} className="flex items-center gap-2">
-                    <input value={d.name} onChange={(e) => { const n = [...draftDenoms]; n[idx] = { ...d, name: e.target.value }; setDraftDenoms(n); }}
-                      placeholder="Name" className="rounded-md px-2 py-1 text-sm outline-none flex-1" style={inputStyle} />
-                    <input value={d.abbr} onChange={(e) => { const n = [...draftDenoms]; n[idx] = { ...d, abbr: e.target.value }; setDraftDenoms(n); }}
-                      placeholder="Abbr" className="rounded-md px-2 py-1 text-sm outline-none w-16" style={inputStyle} />
-                    <span className="text-xs" style={{ color: C.inkMuted }}>=</span>
-                    <input value={d.value} type="number" min="1" onChange={(e) => { const n = [...draftDenoms]; n[idx] = { ...d, value: e.target.value }; setDraftDenoms(n); }}
-                      className="rounded-md px-2 py-1 text-sm outline-none w-20" style={inputStyle} />
-                    <span className="text-xs" style={{ color: C.inkMuted }}>base units</span>
-                    <button onClick={() => setDraftDenoms(draftDenoms.filter((_, i) => i !== idx))} className="ml-auto text-sm" style={{ color: C.red }}>✕</button>
-                  </div>
-                ))}
-              </div>
-              <button onClick={() => setDraftDenoms([...draftDenoms, { id: genId(), name: "", abbr: "", value: 1 }])}
-                className="text-xs font-medium" style={{ color: C.brassDark }}>+ Add denomination</button>
-              {currencyError && <p className="text-xs" style={{ color: C.red }}>{currencyError}</p>}
-              <p className="text-xs" style={{ color: C.inkMuted }}>The smallest denomination must equal 1 — that's the base unit everything else is priced in. Changing this doesn't rescale gold or item costs already on the books.</p>
-              <div className="flex gap-2">
-                <button onClick={saveCurrency} className="rounded-md px-3 py-1.5 text-sm font-medium" style={{ background: C.brass, color: "#fff" }}>Save changes</button>
-                <button onClick={() => setEditingCurrency(false)} className="rounded-md px-3 py-1.5 text-sm" style={{ border: `1px solid ${C.cardBorder}`, color: C.inkMuted }}>Cancel</button>
-              </div>
-            </div>
-          )}
-        </div>
-      </section>
-
-      <section>
-        <h2 className={sectionTitle} style={{ color: C.ink }}>Party members</h2>
-        <div className="flex gap-2 mb-3">
-          <input value={newPlayer} onChange={(e) => setNewPlayer(e.target.value)}
-            onKeyDown={(e) => { if (e.key === "Enter" && newPlayer.trim()) { actions.addPlayer(newPlayer.trim()); setNewPlayer(""); } }}
-            placeholder="New player's name" className="rounded-md px-3 py-1.5 text-sm outline-none flex-1" style={inputStyle} />
-          <button onClick={() => { if (newPlayer.trim()) { actions.addPlayer(newPlayer.trim()); setNewPlayer(""); } }}
-            className="rounded-md px-3 py-1.5 text-sm font-medium" style={{ background: C.brass, color: "#fff" }}>+ Add</button>
-        </div>
-        {state.players.length === 0 ? (
-          <p className="text-sm" style={{ color: C.inkMuted }}>No one's in the party yet. Add your players above.</p>
-        ) : (
-          <div className="space-y-2">
-            {state.players.map((p) => (
-              <div key={p.id} className="rounded-lg p-3 flex flex-wrap items-center justify-between gap-2" style={{ background: C.card, border: `1px solid ${C.cardBorder}` }}>
-                <div className="font-medium" style={{ color: C.ink }}>{p.name}</div>
-                <div className="flex items-center gap-3">
-                  <CoinBreakdown base={p.gold} denominations={state.currency} size="sm" />
-                  <ConfirmButton onConfirm={() => actions.removePlayer(p.id)} label="Remove" confirmLabel="Remove for good?" />
-                </div>
-              </div>
-            ))}
-          </div>
-        )}
-      </section>
-
-      <section>
-        <h2 className={sectionTitle} style={{ color: C.ink }}>Add an item to the party loot</h2>
-        <form onSubmit={submitItem} className="rounded-lg p-4 space-y-3" style={{ background: C.card, border: `1px solid ${C.cardBorder}` }}>
-          <div className="grid grid-cols-2 gap-3">
-            <div>
-              <label className={label} style={{ color: C.inkMuted }}>Item name</label>
-              <input value={itemName} onChange={(e) => setItemName(e.target.value)} required className="w-full rounded-md px-2 py-1.5 text-sm outline-none" style={inputStyle} />
-            </div>
-            <div>
-              <label className={label} style={{ color: C.inkMuted }}>Type</label>
-              <input list="type-suggestions" value={itemType} onChange={(e) => setItemType(e.target.value)} placeholder="Misc" className="w-full rounded-md px-2 py-1.5 text-sm outline-none" style={inputStyle} />
-              <datalist id="type-suggestions">
-                {Array.from(new Set([...TYPE_SUGGESTIONS, ...state.items.map((i) => i.type)])).map((t) => <option key={t} value={t} />)}
-              </datalist>
-            </div>
-          </div>
-          <div className="grid grid-cols-2 gap-3">
-            <div>
-              <label className={label} style={{ color: C.inkMuted }}>Where it came from</label>
-              <input list="source-suggestions" value={itemSource} onChange={(e) => setItemSource(e.target.value)} placeholder="e.g. Goblin ambush" className="w-full rounded-md px-2 py-1.5 text-sm outline-none" style={inputStyle} />
-              <datalist id="source-suggestions">
-                {Array.from(new Set(state.items.map((i) => i.source))).map((s) => <option key={s} value={s} />)}
-              </datalist>
-            </div>
-            <div>
-              <label className={label} style={{ color: C.inkMuted }}>Cost</label>
-              <div className="flex gap-2">
-                <input type="number" min="0" step="any" value={costAmount} onChange={(e) => setCostAmount(e.target.value)} placeholder="0" className="w-full rounded-md px-2 py-1.5 text-sm outline-none" style={inputStyle} />
-                <select value={costDenom} onChange={(e) => setCostDenom(e.target.value)} className="rounded-md px-2 py-1.5 text-sm outline-none" style={inputStyle}>
-                  {denomOptions.map((d) => <option key={d.id} value={d.id}>{d.abbr}</option>)}
-                </select>
-              </div>
-            </div>
-          </div>
-          <div>
-            <label className={label} style={{ color: C.inkMuted }}>Description (optional)</label>
-            <textarea
-              value={itemDescription}
-              onChange={(e) => setItemDescription(e.target.value)}
-              placeholder="What does it do? Press Enter to start a new paragraph (e.g. separate abilities)."
-              rows={4}
-              className="w-full rounded-md px-2 py-1.5 text-sm outline-none resize-y"
-              style={inputStyle}
-            />
-          </div>
-          <button type="submit" className="rounded-md px-3 py-1.5 text-sm font-medium" style={{ background: C.brass, color: "#fff" }}>+ Add to party loot</button>
-        </form>
-      </section>
-
-      <section>
-        <h2 className={sectionTitle} style={{ color: C.ink }}>Full loot log</h2>
-        <FilterBar items={state.items} type={logType} setType={setLogType} source={logSource} setSource={setLogSource} sort={logSort} setSort={setLogSort} search={logSearch} setSearch={setLogSearch} />
-        {filteredLog.length === 0 ? (
-          <p className="text-sm" style={{ color: C.inkMuted }}>No items match. Add loot above, or clear your filters.</p>
-        ) : (
-          <div className="space-y-2">
-            {filteredLog.map((item) => (
-              <LootRow key={item.id} item={item} denominations={state.currency} players={state.players}
-                right={<ConfirmButton onConfirm={() => actions.deleteItem(item.id)} />} />
-            ))}
-          </div>
-        )}
-      </section>
-    </div>
-  );
-}
-
-function OwnerFilter({ players, selected, onToggle, onClear }) {
-  const options = [{ id: "unclaimed", label: "Party loot (unclaimed)" }, ...players.map((p) => ({ id: p.id, label: p.name }))];
-  return (
-    <div className="flex flex-wrap items-center gap-1.5 mb-3">
-      <span className="text-xs" style={{ color: C.inkMuted }}>Who has it:</span>
-      {options.map((opt) => {
-        const active = selected.has(opt.id);
-        return (
-          <button
-            key={opt.id}
-            onClick={() => onToggle(opt.id)}
-            className="rounded-full px-3 py-1 text-xs font-medium"
-            style={active ? { background: C.brass, color: "#fff" } : { background: C.card, border: `1px solid ${C.cardBorder}`, color: C.inkMuted }}
-          >
-            {opt.label}
-          </button>
-        );
-      })}
-      {selected.size > 0 && (
-        <button onClick={onClear} className="text-xs underline" style={{ color: C.inkMuted }}>Clear</button>
-      )}
-    </div>
-  );
-}
-
-/* ---------------- Party Tab ---------------- */
-function PartyTab({ state, actions }) {
-  const [addAmount, setAddAmount] = useState("");
-  const [addDenom, setAddDenom] = useState(state.currency[state.currency.length - 1]?.id || "");
-  const [splitMsg, setSplitMsg] = useState(null);
-  const [claimSelections, setClaimSelections] = useState({});
-  const [type, setType] = useState("all");
-  const [source, setSource] = useState("all");
-  const [sort, setSort] = useState("newest");
-  const [search, setSearch] = useState("");
-  const [ownerFilter, setOwnerFilter] = useState(() => new Set());
-
-  function toggleOwner(id) {
-    setOwnerFilter((prev) => {
-      const next = new Set(prev);
-      if (next.has(id)) next.delete(id);
-      else next.add(id);
-      return next;
-    });
-  }
-
-  const ownerFiltered = ownerFilter.size === 0
-    ? state.items
-    : state.items.filter((i) => (i.claimedBy ? ownerFilter.has(i.claimedBy) : ownerFilter.has("unclaimed")));
-  const filtered = filterAndSort(ownerFiltered, { type, source, sort, search });
-  const inputStyle = { background: C.card, border: `1px solid ${C.cardBorder}`, color: C.ink };
-
-  function applyGoldChange(sign) {
-    const denom = state.currency.find((d) => d.id === addDenom) || state.currency[0];
-    const amount = parseFloat(addAmount) || 0;
-    if (!amount) return;
-    actions.adjustPartyGold(Math.round(amount * denom.value) * sign);
-    setAddAmount("");
-  }
-  function doSplit() {
-    const n = state.players.length;
-    if (n === 0) { setSplitMsg("Add some players first — there's no one to split with."); return; }
-    const share = Math.floor(state.party.gold / n);
-    if (share <= 0) { setSplitMsg("Not enough gold in the party pot for an even split."); return; }
-    const remainder = state.party.gold - share * n;
-    actions.splitGoldEqually();
-    const shareText = breakdown(share, state.currency).map((p) => `${p.count} ${p.abbr}`).join(", ");
-    setSplitMsg(`Split into ${n} shares of ${shareText} each.${remainder > 0 ? ` ${remainder} left in the pot (too little to split further).` : ""}`);
-  }
-  useEffect(() => {
-    if (!splitMsg) return;
-    const t = setTimeout(() => setSplitMsg(null), 6000);
-    return () => clearTimeout(t);
-  }, [splitMsg]);
-
-  return (
-    <div className="space-y-8">
-      <section>
-        <h2 className="font-display text-lg mb-2" style={{ color: C.ink }}>Party gold</h2>
-        <div className="rounded-lg p-4 space-y-3" style={{ background: C.card, border: `1px solid ${C.cardBorder}` }}>
-          <CoinBreakdown base={state.party.gold} denominations={state.currency} />
-          <div className="flex flex-wrap items-center gap-2">
-            <input type="number" min="0" step="any" value={addAmount} onChange={(e) => setAddAmount(e.target.value)} placeholder="Amount" className="rounded-md px-2 py-1.5 text-sm outline-none w-28" style={inputStyle} />
-            <select value={addDenom} onChange={(e) => setAddDenom(e.target.value)} className="rounded-md px-2 py-1.5 text-sm outline-none" style={inputStyle}>
-              {state.currency.map((d) => <option key={d.id} value={d.id}>{d.abbr}</option>)}
-            </select>
-            <button onClick={() => applyGoldChange(1)} className="rounded-md px-2 py-1.5 text-sm font-medium" style={{ background: C.green, color: "#fff" }}>+ Add</button>
-            <button onClick={() => applyGoldChange(-1)} className="rounded-md px-2 py-1.5 text-sm font-medium" style={{ background: C.red, color: "#fff" }}>− Remove</button>
-          </div>
-          <div className="pt-2" style={{ borderTop: `1px solid ${C.cardBorder}` }}>
-            <button onClick={doSplit} className="rounded-md px-3 py-1.5 text-sm font-medium" style={{ background: C.brass, color: "#fff" }}>Split gold equally</button>
-            {splitMsg && <p className="text-sm mt-2" style={{ color: C.inkMuted }}>{splitMsg}</p>}
-          </div>
-        </div>
-      </section>
-      <section>
-        <h2 className="font-display text-lg mb-2" style={{ color: C.ink }}>Party inventory</h2>
-        <p className="text-sm mb-3" style={{ color: C.inkMuted }}>Everything the party has found, whether it's still up for grabs or already claimed by someone.</p>
-        <OwnerFilter players={state.players} selected={ownerFilter} onToggle={toggleOwner} onClear={() => setOwnerFilter(new Set())} />
-        <FilterBar items={state.items} type={type} setType={setType} source={source} setSource={setSource} sort={sort} setSort={setSort} search={search} setSearch={setSearch} />
-        {filtered.length === 0 ? (
-          <p className="text-sm" style={{ color: C.inkMuted }}>{state.items.length === 0 ? "The loot pile is empty. The DM can add items in the Dungeon Master tab." : "Nothing matches those filters."}</p>
-        ) : (
-          <div className="space-y-2">
-            {filtered.map((item) => (
-              <LootRow key={item.id} item={item} denominations={state.currency} players={state.players}
-                right={!item.claimedBy ? (
-                  state.players.length === 0 ? (
-                    <span className="text-xs" style={{ color: C.inkMuted }}>Add players to claim</span>
-                  ) : (
-                    <div className="flex items-center gap-2">
-                      <select value={claimSelections[item.id] || state.players[0].id} onChange={(e) => setClaimSelections({ ...claimSelections, [item.id]: e.target.value })}
-                        className="rounded-md px-2 py-1 text-xs outline-none" style={{ background: "#fff", border: `1px solid ${C.cardBorder}`, color: C.ink }}>
-                        {state.players.map((p) => <option key={p.id} value={p.id}>{p.name}</option>)}
-                      </select>
-                      <button onClick={() => actions.claimItem(item.id, claimSelections[item.id] || state.players[0].id)}
-                        className="rounded-md px-2 py-1 text-xs font-medium" style={{ background: C.green, color: "#fff" }}>Claim</button>
-                    </div>
-                  )
-                ) : (
-                  <button onClick={() => actions.releaseItem(item.id)} className="rounded-md px-2 py-1 text-xs font-medium" style={{ border: `1px solid ${C.cardBorder}`, color: C.inkMuted }}>Return to party</button>
-                )} />
-            ))}
-          </div>
-        )}
-      </section>
-    </div>
-  );
-}
-
-/* ---------------- Player Tab ---------------- */
-function PlayerTab({ state, actions }) {
-  const [viewId, setViewId] = useState(state.players[0]?.id || "");
-  const [goldAmount, setGoldAmount] = useState("");
-  const [goldDenom, setGoldDenom] = useState(state.currency[state.currency.length - 1]?.id || "");
-  const [goldMsg, setGoldMsg] = useState(null);
-
-  useEffect(() => {
-    if (!state.players.find((p) => p.id === viewId)) setViewId(state.players[0]?.id || "");
-  }, [state.players]);
-
-  useEffect(() => {
-    if (!goldMsg) return;
-    const t = setTimeout(() => setGoldMsg(null), 4000);
-    return () => clearTimeout(t);
-  }, [goldMsg]);
-
-  if (state.players.length === 0) {
-    return <p className="text-sm" style={{ color: C.inkMuted }}>No players yet. Ask your DM to add the party in the Dungeon Master tab.</p>;
-  }
-  const player = state.players.find((p) => p.id === viewId) || state.players[0];
-  const myItems = state.items.filter((i) => i.claimedBy === player.id);
-  const unclaimed = filterAndSort(state.items.filter((i) => !i.claimedBy), { type: "all", source: "all", sort: "newest", search: "" });
-  const inputStyle = { background: C.card, border: `1px solid ${C.cardBorder}`, color: C.ink };
-
-  function goldBaseAmount() {
-    const denom = state.currency.find((d) => d.id === goldDenom) || state.currency[0];
-    const amount = parseFloat(goldAmount) || 0;
-    return Math.round(amount * denom.value);
-  }
-  function handleSendToParty() {
-    const base = goldBaseAmount();
-    if (base <= 0) return;
-    if (base > player.gold) { setGoldMsg("You don't have that much coin."); return; }
-    actions.sendGoldToParty(player.id, base);
-    setGoldMsg(`Sent to the party pot.`);
-    setGoldAmount("");
-  }
-  function handleDiscard() {
-    const base = goldBaseAmount();
-    if (base <= 0) return;
-    if (base > player.gold) { setGoldMsg("You don't have that much coin."); return; }
-    actions.discardPlayerGold(player.id, base);
-    setGoldMsg(`Removed from your coin purse.`);
-    setGoldAmount("");
-  }
-
-  return (
-    <div className="space-y-8">
-      <div className="flex flex-wrap gap-1.5">
-        {state.players.map((p) => (
-          <button
-            key={p.id}
-            onClick={() => setViewId(p.id)}
-            className="rounded-md px-3 py-1.5 text-sm font-medium"
-            style={
-              p.id === player.id
-                ? { background: C.brass, color: "#fff" }
-                : { background: C.card, border: `1px solid ${C.cardBorder}`, color: C.inkMuted }
-            }
-          >
-            {p.name}
-          </button>
-        ))}
-      </div>
-
-      <section>
-        <h2 className="font-display text-lg mb-2" style={{ color: C.ink }}>{player.name}'s coin</h2>
-        <div className="rounded-lg p-4 space-y-3" style={{ background: C.card, border: `1px solid ${C.cardBorder}` }}>
-          <CoinBreakdown base={player.gold} denominations={state.currency} />
-          <div className="flex flex-wrap items-center gap-2">
-            <input type="number" min="0" step="any" value={goldAmount} onChange={(e) => setGoldAmount(e.target.value)} placeholder="Amount" className="rounded-md px-2 py-1.5 text-sm outline-none w-28" style={inputStyle} />
-            <select value={goldDenom} onChange={(e) => setGoldDenom(e.target.value)} className="rounded-md px-2 py-1.5 text-sm outline-none" style={inputStyle}>
-              {state.currency.map((d) => <option key={d.id} value={d.id}>{d.abbr}</option>)}
-            </select>
-            <button onClick={handleSendToParty} className="rounded-md px-2 py-1.5 text-sm font-medium" style={{ background: C.brass, color: "#fff" }}>Send to party pot</button>
-            <button onClick={handleDiscard} className="rounded-md px-2 py-1.5 text-sm font-medium" style={{ background: C.red, color: "#fff" }}>Remove coins</button>
-          </div>
-          {goldMsg && <p className="text-sm" style={{ color: C.inkMuted }}>{goldMsg}</p>}
-        </div>
-      </section>
-
-      <section>
-        <h2 className="font-display text-lg mb-2" style={{ color: C.ink }}>{player.name}'s inventory</h2>
-        {myItems.length === 0 ? (
-          <p className="text-sm" style={{ color: C.inkMuted }}>Nothing claimed yet. Browse the party loot below.</p>
-        ) : (
-          <div className="space-y-2">
-            {myItems.map((item) => (
-              <LootRow key={item.id} item={item} denominations={state.currency} players={state.players}
-                right={<button onClick={() => actions.releaseItem(item.id)} className="rounded-md px-2 py-1 text-xs font-medium" style={{ border: `1px solid ${C.cardBorder}`, color: C.inkMuted }}>Return to party</button>} />
-            ))}
-          </div>
-        )}
-      </section>
-      <section>
-        <h2 className="font-display text-lg mb-2" style={{ color: C.ink }}>Party loot up for grabs</h2>
-        {unclaimed.length === 0 ? (
-          <p className="text-sm" style={{ color: C.inkMuted }}>No unclaimed items right now.</p>
-        ) : (
-          <div className="space-y-2">
-            {unclaimed.map((item) => (
-              <LootRow key={item.id} item={item} denominations={state.currency} players={state.players}
-                right={<button onClick={() => actions.claimItem(item.id, player.id)} className="rounded-md px-2 py-1 text-xs font-medium" style={{ background: C.green, color: "#fff" }}>Claim</button>} />
-            ))}
-          </div>
-        )}
-      </section>
-    </div>
-  );
-}
-
-/* ---------------- App ---------------- */
-const TABS = [
-  { id: "dm", label: "Dungeon Master" },
-  { id: "party", label: "Party" },
-  { id: "player", label: "Player" },
-];
-
-function App() {
-  const [state, setState] = useState(null);
-  const [tab, setTab] = useState("party");
-  const [error, setError] = useState(null);
-  const isInitialLoad = useRef(true);
-
-  useEffect(() => {
-    function init() {
-      return window.ledgerDB.subscribe((data) => {
-        setState(data || DEFAULT_STATE);
+    cards.forEach(card => {
+      card.addEventListener('click', () => {
+        const img = card.querySelector('img');
+        if (!img) return; // no image yet, skip
+        lightboxImg.src = img.src;
+        lightboxImg.alt = img.alt;
+        lightbox.classList.add('active');
+        document.body.style.overflow = 'hidden';
       });
+    });
+
+    function closeLightbox() {
+      lightbox.classList.remove('active');
+      document.body.style.overflow = '';
     }
-    let unsub;
-    if (window.ledgerDB) unsub = init();
-    else window.addEventListener("ledgerdb-ready", () => { unsub = init(); }, { once: true });
-    return () => { if (unsub) unsub(); };
-  }, []);
 
-  useEffect(() => {
-    if (state === null) return;
-    if (isInitialLoad.current) { isInitialLoad.current = false; return; }
-    window.ledgerDB.setState(state).then(() => setError(null)).catch(() => setError("Couldn't save your last change — check your internet connection."));
-  }, [state]);
+    lightboxClose.addEventListener('click', closeLightbox);
+    lightbox.addEventListener('click', e => { if (e.target === lightbox) closeLightbox(); });
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') closeLightbox(); });
 
-  const actions = {
-    renameParty: (name) => setState((prev) => ({ ...prev, party: { ...prev.party, name } })),
-    addPlayer: (name) => setState((prev) => ({ ...prev, players: [...prev.players, { id: genId(), name, gold: 0 }] })),
-    removePlayer: (id) => setState((prev) => {
-      const player = prev.players.find((p) => p.id === id);
-      if (!player) return prev;
-      const items = prev.items.map((it) => (it.claimedBy === id ? { ...it, claimedBy: null } : it));
-      return { ...prev, players: prev.players.filter((p) => p.id !== id), party: { ...prev.party, gold: prev.party.gold + player.gold }, items };
-    }),
-    addItem: ({ name, type, source, description, cost }) => setState((prev) => ({ ...prev, items: [...prev.items, { id: genId(), name, type, source, description: description || "", cost, claimedBy: null, addedAt: Date.now() }] })),
-    deleteItem: (id) => setState((prev) => ({ ...prev, items: prev.items.filter((i) => i.id !== id) })),
-    claimItem: (itemId, playerId) => setState((prev) => ({ ...prev, items: prev.items.map((i) => (i.id === itemId ? { ...i, claimedBy: playerId } : i)) })),
-    releaseItem: (itemId) => setState((prev) => ({ ...prev, items: prev.items.map((i) => (i.id === itemId ? { ...i, claimedBy: null } : i)) })),
-    adjustPartyGold: (delta) => setState((prev) => ({ ...prev, party: { ...prev.party, gold: Math.max(0, prev.party.gold + delta) } })),
-    sendGoldToParty: (playerId, amount) => setState((prev) => {
-      const player = prev.players.find((p) => p.id === playerId);
-      if (!player) return prev;
-      const move = Math.max(0, Math.min(amount, player.gold));
-      if (move <= 0) return prev;
-      return {
-        ...prev,
-        party: { ...prev.party, gold: prev.party.gold + move },
-        players: prev.players.map((p) => (p.id === playerId ? { ...p, gold: p.gold - move } : p)),
-      };
-    }),
-    discardPlayerGold: (playerId, amount) => setState((prev) => {
-      const player = prev.players.find((p) => p.id === playerId);
-      if (!player) return prev;
-      const remove = Math.max(0, Math.min(amount, player.gold));
-      if (remove <= 0) return prev;
-      return { ...prev, players: prev.players.map((p) => (p.id === playerId ? { ...p, gold: p.gold - remove } : p)) };
-    }),
-    splitGoldEqually: () => setState((prev) => {
-      const n = prev.players.length;
-      if (n === 0) return prev;
-      const share = Math.floor(prev.party.gold / n);
-      if (share <= 0) return prev;
-      const remainder = prev.party.gold - share * n;
-      return { ...prev, party: { ...prev.party, gold: remainder }, players: prev.players.map((p) => ({ ...p, gold: p.gold + share })) };
-    }),
-    saveCurrency: (denominations) => setState((prev) => ({ ...prev, currency: denominations })),
-  };
+    // Duplicate marquee for seamless loop
+    const track = document.getElementById('marqueeTrack');
+    track.innerHTML += track.innerHTML;
 
-  if (state === null) {
-    return <div className="min-h-screen w-full flex items-center justify-center" style={{ background: C.cover, color: C.coverTextDim }}>Opening the ledger…</div>;
-  }
+    // ── LANGUAGE SWITCHER ──────────────────────────────────────────
+    // To add a new language:
+    // 1. Add a new key (e.g. "fr") to the translations object below
+    // 2. Copy all the keys from "en" and translate the values
+    // 3. Add a new .lang-option button in the HTML above with data-lang="fr"
 
-  return (
-    <div className="min-h-screen w-full" style={{ background: C.cover }}>
-      <div className="max-w-3xl mx-auto pb-10">
-        <header className="px-6 pt-6 pb-1">
-          <h1 className="font-display text-3xl" style={{ color: C.coverText }}>{state.party.name}</h1>
-          <p className="text-sm mt-1" style={{ color: C.coverTextDim }}>Shared loot and coin ledger. Everyone with the link sees the same data, live.</p>
-          {error && <p className="text-sm mt-1" style={{ color: "#E7A79A" }}>{error}</p>}
-        </header>
-        <div className="flex gap-1 px-4 pt-4" style={{ borderBottom: `2px solid ${C.brass}` }}>
-          {TABS.map((t) => (
-            <button key={t.id} onClick={() => setTab(t.id)} className="px-4 py-2 rounded-t-xl font-display text-base"
-              style={tab === t.id
-                ? { background: C.page, color: C.ink, border: `2px solid ${C.brass}`, borderBottom: `2px solid ${C.page}`, marginBottom: "-2px", fontWeight: 600 }
-                : { background: "transparent", color: C.coverTextDim, border: "2px solid transparent" }}>
-              {t.label}
-            </button>
-          ))}
-        </div>
-        <main className="p-5 rounded-b-xl" style={{ background: C.page, minHeight: 420 }}>
-          {tab === "dm" && <DMTab state={state} actions={actions} />}
-          {tab === "party" && <PartyTab state={state} actions={actions} />}
-          {tab === "player" && <PlayerTab state={state} actions={actions} />}
-        </main>
-      </div>
-    </div>
-  );
-}
+    const translations = {
+      en: {
+        // Nav
+        navWork: 'Work',
+        navAbout: 'About',
+        navContact: 'Contact',
+        // Hero
+        heroTag: 'Illustrator & Visual Artist',
+        heroTitle: 'Stories<br>told in<br><em>line & colour</em>',
+        heroDesc: 'Independent illustrator based in [City]. Working across editorial, publishing, and commercial spaces — with a deep love for narrative and texture.',
+        heroCta: 'View selected work',
+        // Gallery
+        galleryLabel: 'Selected Work',
+        galleryTitle: 'Portfolio',
+        // About
+        aboutLabel: 'About',
+        aboutQuote: '"I believe illustration can hold complexity — the kind of truth that words alone can\'t reach."',
+        aboutBio: 'I\'m a freelance illustrator with [X] years of experience working with publishers, editorial outlets, and cultural institutions. My practice is rooted in traditional media — pencil, ink, gouache — though I work fluently in digital.<br><br>Clients have included [Client A], [Client B], and [Client C]. Currently open to new commissions and collaborative projects.',
+        skillYears: 'Years of practice',
+        skillProjects: 'Projects completed',
+        skillAwards: 'Awards & mentions',
+        // Contact
+        contactLabel: 'Get in touch',
+        contactTitle: 'Let\'s make<br>something<br>together.',
+        contactAvail: 'Based in [City], working globally.<br>Available for commissions, residencies,<br>and long-term collaborations.',
+        // Footer
+        footerRight: 'Illustration Portfolio',
+      },
+      es: {
+        // Nav
+        navWork: 'Trabajos',
+        navAbout: 'Sobre mí',
+        navContact: 'Contacto',
+        // Hero
+        heroTag: 'Ilustradora & Artista Visual',
+        heroTitle: 'Historias<br>contadas en<br><em>línea & color</em>',
+        heroDesc: 'Ilustradora independiente basada en [Ciudad]. Trabajando en espacios editoriales, editorial y comercial — con un profundo amor por la narrativa y la textura.',
+        heroCta: 'Ver trabajos seleccionados',
+        // Gallery
+        galleryLabel: 'Trabajos Seleccionados',
+        galleryTitle: 'Portfolio',
+        // About
+        aboutLabel: 'Sobre mí',
+        aboutQuote: '"Creo que la ilustración puede contener complejidad — el tipo de verdad que las palabras solas no pueden alcanzar."',
+        aboutBio: 'Soy ilustrador freelance con [X] años de experiencia trabajando con editoriales, medios y instituciones culturales. Mi práctica tiene raíces en medios tradicionales — lápiz, tinta, gouache — aunque trabajo con fluidez en digital.<br><br>Mis clientes han incluido [Cliente A], [Cliente B] y [Cliente C]. Actualmente abierta a nuevos encargos y proyectos colaborativos.',
+        skillYears: 'Años de práctica',
+        skillProjects: 'Proyectos completados',
+        skillAwards: 'Premios y menciones',
+        // Contact
+        contactLabel: 'Escribime',
+        contactTitle: 'Hagamos<br>algo juntos.',
+        contactAvail: 'Basada en [Ciudad], trabajo globalmente.<br>Disponible para encargos, residencias<br>y colaboraciones a largo plazo.',
+        // Footer
+        footerRight: 'Portfolio de Ilustración',
+      },
+      // ── ADD NEW LANGUAGE HERE ──
+      // fr: {
+      //   navWork: 'Travaux', navAbout: 'À propos', navContact: 'Contact',
+      //   heroTag: 'Illustratrice & Artiste Visuelle', ... (copy all keys from 'en')
+      // },
+    };
 
-ReactDOM.createRoot(document.getElementById("root")).render(<App />);
-</script>
+    // Elements mapped to translation keys
+    const translatable = [
+      { sel: '.nav-links a[href="#work"]',   key: 'navWork' },
+      { sel: '.nav-links a[href="#about"]',  key: 'navAbout' },
+      { sel: '.nav-links a[href="#contact"]',key: 'navContact' },
+      { sel: '.hero-tag',                    key: 'heroTag' },
+      { sel: '.hero-title',                  key: 'heroTitle', html: true },
+      { sel: '.hero-desc',                   key: 'heroDesc' },
+      { sel: '.hero-cta',                    key: 'heroCta', append: true },
+      { sel: '.section-label',               key: 'galleryLabel' },
+      { sel: '.section-title',               key: 'galleryTitle' },
+      { sel: '.about-left .label',           key: 'aboutLabel' },
+      { sel: '.about-text',                  key: 'aboutQuote' },
+      { sel: '.about-small',                 key: 'aboutBio', html: true },
+      { sel: '.skill-item:nth-child(1) .desc', key: 'skillYears' },
+      { sel: '.skill-item:nth-child(2) .desc', key: 'skillProjects' },
+      { sel: '.skill-item:nth-child(3) .desc', key: 'skillAwards' },
+      { sel: '.contact-left .label',         key: 'contactLabel' },
+      { sel: '.contact-title',               key: 'contactTitle', html: true },
+      { sel: '.contact-right p',             key: 'contactAvail', html: true },
+      { sel: 'footer p:last-child',          key: 'footerRight' },
+    ];
+
+    let currentLang = 'en';
+
+    function applyLang(lang) {
+      const t = translations[lang];
+      if (!t) return;
+      translatable.forEach(({ sel, key, html, append }) => {
+        const el = document.querySelector(sel);
+        if (!el || !t[key]) return;
+        if (append) {
+          // For hero CTA — keep the SVG arrow, replace text node only
+          const textNode = [...el.childNodes].find(n => n.nodeType === 3 && n.textContent.trim());
+          if (textNode) textNode.textContent = t[key];
+        } else if (html) {
+          el.innerHTML = t[key];
+        } else {
+          el.textContent = t[key];
+        }
+      });
+      document.documentElement.lang = lang;
+      document.getElementById('currentLang').textContent = lang.toUpperCase();
+      // Update active state on option buttons
+      document.querySelectorAll('.lang-option').forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.lang === lang);
+      });
+      currentLang = lang;
+    }
+
+    // Toggle menu
+    const langToggle = document.getElementById('langToggle');
+    const langMenu = document.getElementById('langMenu');
+    langToggle.addEventListener('click', () => langMenu.classList.toggle('open'));
+
+    // Pick language
+    document.querySelectorAll('.lang-option').forEach(btn => {
+      btn.addEventListener('click', () => {
+        applyLang(btn.dataset.lang);
+        langMenu.classList.remove('open');
+      });
+    });
+
+    // Close menu when clicking outside
+    document.addEventListener('click', e => {
+      if (!e.target.closest('.lang-switcher')) langMenu.classList.remove('open');
+    });
+  </script>
 </body>
 </html>
